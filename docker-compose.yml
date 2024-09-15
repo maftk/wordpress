@@ -1,0 +1,37 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html_data:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    container_name: db
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: wordpress
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  nextjs:
+    image: node
+    container_name: nextjs
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./nextjs:/nextjs
+      - ./make_next.sh:/make_next.sh
+    working_dir: /nextjs
+    tty: true
